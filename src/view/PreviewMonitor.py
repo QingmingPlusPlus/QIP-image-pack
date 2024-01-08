@@ -1,8 +1,11 @@
 from PySide6.QtWidgets import QWidget, QSizePolicy
 from src.signal.EventBus import EventBus
+from src.utils.path import is_folder_path, get_images_in_folder
 
 
 class PreviewMonitor(QWidget):
+    img_list: list[str] = []
+
     def __init__(self):
         super().__init__()
         self.init_ui()
@@ -15,4 +18,6 @@ class PreviewMonitor(QWidget):
         EventBus.path_selected.connect(self._on_path_selected)
 
     def _on_path_selected(self, path: str):
-        print("From event bus", path)
+        if not is_folder_path(path):
+            return
+        self.img_list = get_images_in_folder(path)
